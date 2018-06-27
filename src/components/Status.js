@@ -14,7 +14,7 @@ export default class Status extends Component {
     info: null
   };
 
-  async componentWillMount() {
+  async UNSAFE_componentWillMount() {
     this.subsciption = NetInfo.addEventListener(
       "connectionChange",
       this.handleChange
