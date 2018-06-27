@@ -14,6 +14,24 @@ export default class Status extends Component {
     info: null
   };
 
+  async componentWillMount() {
+    this.subsciption = NetInfo.addEventListener(
+      "connectionChange",
+      this.handleChange
+    );
+
+    // DEBUG HELPER -- REMOVE LATER
+    setTimeout(() => this.handleChange("none"), 3000);
+  }
+
+  componentWillUnmount() {
+    this.subsciption.remove();
+  }
+
+  handleChange = () => {
+    this.setState({ info });
+  };
+
   render() {
     const { info } = this.state;
 
