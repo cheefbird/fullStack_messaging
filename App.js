@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { StyleSheet, View } from "react-native";
 
+import Status from "./src/components/Status";
+
 export default class App extends Component {
   renderMessageList() {
     return <View style={styles.content} />;
@@ -17,6 +19,7 @@ export default class App extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <Status />
         {this.renderMessageList()}
         {this.renderToolbar()}
         {this.renderInputMethodEditor()}
