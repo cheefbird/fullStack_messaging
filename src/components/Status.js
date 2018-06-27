@@ -28,7 +28,7 @@ export default class Status extends Component {
     this.subsciption.remove();
   }
 
-  handleChange = () => {
+  handleChange = info => {
     this.setState({ info });
   };
 
