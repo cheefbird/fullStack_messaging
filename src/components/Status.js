@@ -20,8 +20,18 @@ export default class Status extends Component {
     const isConnected = info !== "none";
     const backgroundColor = isConnected ? "white" : "red";
 
+    const statusBar = (
+      <StatusBar
+        backgroundColor={backgroundColor}
+        barStyle={isConnected ? "dark-content" : "light-content"}
+        animated={false}
+      />
+    );
+
     if (Platform.OS == "ios") {
-      return <View style={[styles.status, { backgroundColor }]} />;
+      return (
+        <View style={[styles.status, { backgroundColor }]}>{statusBar}</View>
+      );
     }
 
     return null; // Temporary!
