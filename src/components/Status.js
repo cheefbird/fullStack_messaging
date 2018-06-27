@@ -21,7 +21,7 @@ export default class Status extends Component {
     );
 
     // DEBUG HELPER -- REMOVE LATER
-    setTimeout(() => this.handleChange("none"), 3000);
+    // setTimeout(() => this.handleChange("none"), 3000);
   }
 
   componentWillUnmount() {
