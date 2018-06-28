@@ -8,6 +8,9 @@ import Grid from "./Grid";
 const keyExtractor = ({ uri }) => uri;
 
 export default class ImageGrid extends Component {
+  loading = false;
+  cursor = null;
+
   static propTypes = {
     onPressImage: PropTypes.func
   };
@@ -24,26 +27,43 @@ export default class ImageGrid extends Component {
     this.getImages();
   }
 
-  getImages = async () => {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+  getImages = async after => {
+    if (this.loading) return;
 
-    if (status !== "granted") {
-      console.log("Camera roll permission denied!");
-      return;
-    }
+    this.loading = true;
 
     const results = await CameraRoll.getPhotos({
-      first: 20
+      first: 20,
+      after
     });
 
-    const { edges } = results;
+    const {
+      edges,
+      page_info: { has_next_page, end_cursor }
+    } = results;
 
     const loadedImages = edges.map(item => item.node.image);
 
-    this.setState({ images: loadedImages });
+    this.setState(
+      {
+        images: this.state.images.concat(loadedImages)
+      },
+      () => {
+        this.loading = false;
+        this.cursor = has_next_page ? end_cursor : null;
+      }
+    );
+  };
+
+  getNextImages = () => {
+    if (!this.cursor) return;
+
+    this.getImages(this.cursor);
   };
 
   renderItem = ({ item: { uri }, size, marginTop, marginLeft }) => {
+    const { onPressImage } = this.props;
+
     const style = {
       width: size,
       height: size,
@@ -51,7 +71,16 @@ export default class ImageGrid extends Component {
       marginTop
     };
 
-    return <Image source={{ uri }} style={style} />;
+    return (
+      <TouchableOpacity
+        key={uri}
+        activeOpacity={0.75}
+        onPress={() => onPressImage(uri)}
+        style={style}
+      >
+        <Image source={{ uri }} style={styles.image} />
+      </TouchableOpacity>
+    );
   };
 
   render() {
@@ -62,6 +91,7 @@ export default class ImageGrid extends Component {
         data={images}
         renderItem={this.renderItem}
         keyExtractor={keyExtractor}
+        onEndReached={this.getNextImages}
       />
     );
   }
