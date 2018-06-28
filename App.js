@@ -129,10 +129,6 @@ export default class App extends Component {
     return <View style={styles.inputMethodEditor} />;
   }
 
-  renderToolbar() {
-    return <View style={styles.toolbar} />;
-  }
-
   handlePressToolbarCamera = () => {};
 
   handlePressToolbarLocation = () => {};
