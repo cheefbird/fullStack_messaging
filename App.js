@@ -11,6 +11,7 @@ import {
 import Status from "./src/components/Status";
 import MessageList from "./src/components/MessageList";
 import Toolbar from "./src/components/Toolbar";
+import ImageGrid from "./src/components/ImageGrid";
 
 import {
   createImageMessage,
@@ -125,9 +126,11 @@ export default class App extends Component {
     );
   }
 
-  renderInputMethodEditor() {
-    return <View style={styles.inputMethodEditor} />;
-  }
+  renderInputMethodEditor = () => (
+    <View style={styles.inputMethodEditor}>
+      <ImageGrid onPressImage={this.handlePressImage} />
+    </View>
+  );
 
   handlePressToolbarCamera = () => {};
 
@@ -160,6 +163,14 @@ export default class App extends Component {
 
     this.setState({
       messages: [createTextMessage(text), ...messages]
+    });
+  };
+
+  handlePressImage = uri => {
+    const { messages } = this.state;
+
+    this.setState({
+      messages: [createImageMessage(uri), ...messages]
     });
   };
 
