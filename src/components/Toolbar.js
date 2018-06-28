@@ -53,6 +53,32 @@ export default class Toolbar extends Component {
     this.setState({ text: "" });
   };
 
+  setInputRef = ref => {
+    this.input = ref;
+  };
+
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    if (nextProps.isFocused !== this.props.isFocused) {
+      if (nextProps.isFocused) {
+        this.input.focus();
+      } else {
+        this.input.blur();
+      }
+    }
+  }
+
+  handleFocus = () => {
+    const { onChangeFocus } = this.props;
+
+    onChangeFocus(true);
+  };
+
+  handleBlur = () => {
+    const { onChangeFocus } = this.props;
+
+    onChangeFocus(false);
+  };
+
   render() {
     const { onPressCamera, onPressLocation } = this.props;
     const { text } = this.state;
@@ -70,6 +96,10 @@ export default class Toolbar extends Component {
             value={text}
             onChangeText={this.handleChangeText}
             onSubmitEditing={this.handleSubmitEditing}
+            // Additional!!!!
+            ref={this.setInputRef}
+            onFocus={this.handleFocus}
+            onBlur={this.handleBlur}
           />
         </View>
       </View>
