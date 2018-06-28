@@ -31,4 +31,86 @@ export default class Keyboardtate extends Component {
       keyboardAnimationDuration: INITIAL_ANIMATION_DURATION
     };
   }
+
+  UNSAFE_componentWillMount() {
+    if (Platform.OS === "ios") {
+      this.subscriptions = [
+        Keyboard.addListener("keyboardWillShow", this.keyboardWillShow),
+        Keyboard.addListener("keyboardWillHide", this.keyboardWillHide),
+        Keyboard.addListener("keyboardDidShow", this.keyboardDidShow),
+        Keyboard.addListener("keyboardDidHide", this.keyboardDidHide)
+      ];
+    } else {
+      this.subscriptions = [
+        Keyboard.addListener("keyboardDidHide", this.keyboardDidHide),
+        Keyboard.addListener("keyboardDidShow", this.keyboardDidShow)
+      ];
+    }
+  }
+
+  componentWillMount() {
+    this.subscriptions.forEach(subscription => subscription.remove());
+  }
+
+  keyboardWillShow = event => {
+    this.setState({ keyboardWillShow: true });
+    this.measure(event);
+  };
+
+  keyboardDidShow = () => {
+    this.setState({
+      keyboardWillShow: false,
+      keyboardVisible: true
+    });
+    this.measure(event);
+  };
+
+  keyboardWillHide = event => {
+    this.setState({ keyboardWillHide: true });
+    this.measure(event);
+  };
+
+  keyboardDidHide = () => {
+    this.setState({
+      keyboardWillHide: false,
+      keyboardVisible: false
+    });
+  };
+
+  measure = event => {
+    const { layout } = this.props;
+
+    const {
+      endCoordinates: { height, screenY },
+      duration = INITIAL_ANIMATION_DURATION
+    } = event;
+
+    this.setState({
+      contentHeight: screenY - layout.y,
+      keyboardHeight: height,
+      keyboardAnimationDuration: duration
+    });
+  };
+
+  render() {
+    const { children, layout } = this.props;
+    const {
+      contentHeight,
+      keyboardHeight,
+      keyboardVisible,
+      keyboardWillShow,
+      keyboardWillHide,
+      keyboardAnimationDuration
+    } = this.state;
+
+    return children({
+      containerHeight: layout.height,
+      contentHeight,
+      keyboardHeight,
+      keyboardVisible,
+      keyboardWillShow,
+      keyboardWillHide,
+      keyboardAnimationDuration
+    });
+  }
 }
