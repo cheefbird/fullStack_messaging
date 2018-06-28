@@ -79,7 +79,7 @@ export default class App extends Component {
         break;
 
       case "image":
-        this.setState({ fullscreenImageId: id });
+        this.setState({ fullscreenImageId: id, isInputFocused: false });
         break;
 
       default:
