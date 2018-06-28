@@ -10,6 +10,8 @@ import {
 
 import Status from "./src/components/Status";
 import MessageList from "./src/components/MessageList";
+import Toolbar from "./src/components/Toolbar";
+
 import {
   createImageMessage,
   createLocationMessage,
@@ -27,7 +29,8 @@ export default class App extends Component {
         longitude: -122.4324
       })
     ],
-    fullscreenImageId: null
+    fullscreenImageId: null,
+    isInputFocused: false
   };
 
   UNSAFE_componentWillMount() {
@@ -76,7 +79,7 @@ export default class App extends Component {
         break;
 
       case "image":
-        this.setState({ fullscreenImageId: id });
+        this.setState({ fullscreenImageId: id, isInputFocused: false });
         break;
 
       default:
@@ -126,8 +129,54 @@ export default class App extends Component {
     return <View style={styles.inputMethodEditor} />;
   }
 
+  handlePressToolbarCamera = () => {};
+
+  handlePressToolbarLocation = () => {
+    const { messages } = this.state;
+
+    navigator.geolocation.getCurrentPosition(position => {
+      const {
+        coords: { latitude, longitude }
+      } = position;
+
+      this.setState({
+        messages: [
+          createLocationMessage({
+            latitude,
+            longitude
+          }),
+          ...messages
+        ]
+      });
+    });
+  };
+
+  handleChangeFocus = isFocused => {
+    this.setState({ isInputFocused: isFocused });
+  };
+
+  handleSubmit = text => {
+    const { messages } = this.state;
+
+    this.setState({
+      messages: [createTextMessage(text), ...messages]
+    });
+  };
+
   renderToolbar() {
-    return <View style={styles.toolbar} />;
+    const { isInputFocused } = this.state;
+
+    return (
+      <View style={styles.toolbar}>
+        <Toolbar
+          isFocused={isInputFocused}
+          onSubmit={this.handleSubmit}
+          onChangeFocus={this.handleChangeFocus}
+          onPressCamera={this.handlePressToolbarCamera}
+          onPressLocation={this.handlePressToolbarLocation}
+        />
+      </View>
+    );
   }
 
   render() {
