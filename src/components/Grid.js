@@ -15,7 +15,22 @@ export default class Grid extends Component {
   };
 
   renderGridItem = info => {
-    // TODO
+    const { index } = info;
+    const { renderItem, numColumns, itemMargin } = this.props;
+
+    const { width } = Dimensions.get("window");
+
+    const size = PixelRatio.roundToNearestPixel(
+      (width - itemMargin * (numColumns - 1)) / numColumns
+    );
+
+    // Avoid including a 'marginLeft' on first item of a row
+    const marginLeft = index % numColumns === 0 ? 0 : itemMargin;
+
+    // Avoid including a 'marginTop' on first row of grid
+    const marginTop = index < numColumns ? 0 : itemMargin;
+
+    return renderItem({ ...info, size, marginLeft, marginTop });
   };
 
   render() {
