@@ -85,8 +85,8 @@ export default class Toolbar extends Component {
 
     return (
       <View style={styles.toolbar}>
-        <ToolbarButton title={"C"} onPress={onPressCamera} />
-        <ToolbarButton title={"L"} onPress={onPressLocation} />
+        <ToolbarButton title={"📷"} onPress={onPressCamera} />
+        <ToolbarButton title={"📍"} onPress={onPressLocation} />
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.input}
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     borderWidth: 1,
-    borderColor: "rgba(0,0,0,0,04)",
+    borderColor: "rgba(0,0,0,0.04)",
     borderRadius: 16,
     paddingVertical: 4,
     paddingHorizontal: 12,
