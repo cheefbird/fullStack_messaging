@@ -128,7 +128,7 @@ export default class App extends Component {
 
   renderInputMethodEditor = () => (
     <View style={styles.inputMethodEditor}>
-      <ImageGrid />
+      <ImageGrid onPressImage={this.handlePressImage} />
     </View>
   );
 
@@ -163,6 +163,14 @@ export default class App extends Component {
 
     this.setState({
       messages: [createTextMessage(text), ...messages]
+    });
+  };
+
+  handlePressImage = uri => {
+    const { messages } = this.state;
+
+    this.setState({
+      messages: [createImageMessage(uri), ...messages]
     });
   };
 
