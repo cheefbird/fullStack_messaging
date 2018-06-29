@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 
 const INITIAL_ANIMATION_DURATION = 250;
 
-export default class Keyboardtate extends Component {
+export default class KeyboardState extends Component {
   static propTypes = {
     layout: PropTypes.shape({
       x: PropTypes.number.isRequired,
@@ -48,7 +48,7 @@ export default class Keyboardtate extends Component {
     }
   }
 
-  componentWillMount() {
+  componentWillUnmount() {
     this.subscriptions.forEach(subscription => subscription.remove());
   }
 

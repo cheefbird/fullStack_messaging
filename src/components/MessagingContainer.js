@@ -68,7 +68,8 @@ export default class MessagingContainer extends Component {
       keyboardAnimationDuration,
       Platform.OS === "android"
         ? LayoutAnimation.Types.easeInEaseOut
-        : LayoutAnimation.Properties.opacity
+        : LayoutAnimation.Types.keyboard,
+      LayoutAnimation.Properties.opacity
     );
     LayoutAnimation.configureNext(animation);
   }
