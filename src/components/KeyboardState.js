@@ -57,7 +57,7 @@ export default class KeyboardState extends Component {
     this.measure(event);
   };
 
-  keyboardDidShow = () => {
+  keyboardDidShow = event => {
     this.setState({
       keyboardWillShow: false,
       keyboardVisible: true
