@@ -12,6 +12,11 @@ import Status from "./src/components/Status";
 import MessageList from "./src/components/MessageList";
 import Toolbar from "./src/components/Toolbar";
 import ImageGrid from "./src/components/ImageGrid";
+import KeyboardState from "./src/components/KeyboardState";
+import MeasureLayout from "./src/components/MeasureLayout";
+import MessagingContainer, {
+  INPUT_METHOD
+} from "./src/components/MessagingContainer";
 
 import {
   createImageMessage,
@@ -31,7 +36,12 @@ export default class App extends Component {
       })
     ],
     fullscreenImageId: null,
-    isInputFocused: false
+    isInputFocused: false,
+    inputMethod: INPUT_METHOD.NONE
+  };
+
+  handleChangeInputMethod = inputMethod => {
+    this.setState({ inputMethod });
   };
 
   UNSAFE_componentWillMount() {
@@ -132,7 +142,9 @@ export default class App extends Component {
     </View>
   );
 
-  handlePressToolbarCamera = () => {};
+  handlePressToolbarCamera = () => {
+    this.setState({ isInputFocused: false, inputMethod: INPUT_METHOD.CUSTOM });
+  };
 
   handlePressToolbarLocation = () => {
     const { messages } = this.state;
@@ -191,12 +203,28 @@ export default class App extends Component {
   }
 
   render() {
+    const { inputMethod } = this.state;
+
     return (
       <View style={styles.container}>
         <Status />
-        {this.renderMessageList()}
-        {this.renderToolbar()}
-        {this.renderInputMethodEditor()}
+        <MeasureLayout>
+          {layout => (
+            <KeyboardState layout={layout}>
+              {keyboardInfo => (
+                <MessagingContainer
+                  {...keyboardInfo}
+                  inputMethod={inputMethod}
+                  onChangeInputMethod={this.handleChangeInputMethod}
+                  renderInputMethodEditor={this.renderInputMethodEditor}
+                >
+                  {this.renderMessageList()}
+                  {this.renderToolbar()}
+                </MessagingContainer>
+              )}
+            </KeyboardState>
+          )}
+        </MeasureLayout>
         {this.renderFullscreenImage()}
       </View>
     );
